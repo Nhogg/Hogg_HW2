@@ -1,6 +1,6 @@
 
 /*
- * *** PLACE YOUR NAME / SECTION HERE ***
+ * *** Nathan Hogg / Section 002 ***
  *
  * Homework # 2 (Programming Assignment). This Java class defines a few basic
  * manipulation operations of a binary trees.
@@ -100,6 +100,9 @@ public class BinaryTree {
     }
 
     public int nodesGT(int val) {
+        if (root == null) {
+            return -1;
+        }
         return nodesGTHelper(root, val);
     }
 
@@ -218,13 +221,28 @@ public class BinaryTree {
      * Depth first search of the tree is based on recursion. This will result
      * in very few lines of code.
      *
+     * We first check if the current node is null. This accomplishes two things:
+     * if the first node passed is null, the tree is empty, and we do not do anything.
+     * If the first node was not null, and we encounter another null, we have searched the
+     * entire tree and can exit the method.
+     * If we are okay to search the tree, we check if the current node contains
+     * the old value and replace it. Then, recursively call replaceValueHelper on
+     * both the next left and next right nodes. This allows us to traverse the entire tree
+     * with only 5 lines of code.
+     *
+     * @param node the root of the tree we need to search
+     * @param oldVal the value we are searching for
+     * @param newVal the value to replace old value with
      */
-
     private void replaceValueHelper(Node node, int oldVal, int newVal) {
 
-        // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
-        // BINARY TREE (WHICH IS BASED ON RECURSION)
-
+	    if (node != null) {
+            if (node.data == oldVal) {
+                node.data = newVal;
+            }
+            replaceValueHelper(node.left, oldVal, newVal);
+            replaceValueHelper(node.right, oldVal, newVal);
+        }
     }
 
 
@@ -240,14 +258,27 @@ public class BinaryTree {
      *
      * Depth first search of the tree is based on recursion. This will result
      * in very few lines of code.
+     *
+     * We first declare an integer, min, and set it to Integer.MAX_VALUE.
+     * Then, we check if the current node is null. This accomplishes two things:
+     * if the first node passed is null, the tree is empty, and we do not do anything.
+     * If the first node was not null, and we encounter another null, we have searched the
+     * entire tree and can exit the method.
+     * Next, we set min to the data found in the current node. We redeclare min to be
+     * the result of calling Math.min() on a recursive call of the method. This determines
+     * the minimum value between the current minimum and the results of the same operation
+     * on the next node, both left and right.
+     *
+     * @param node the root of the tree we need to search.
      */
-
     private int findMinHelper(Node node) {
-
-        // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
-        // BINARY TREE (WHICH IS BASED ON RECURSION)
-
-        return Integer.MAX_VALUE;
+	int min = Integer.MAX_VALUE;
+	if (node != null) {
+        min = node.data;
+        min = Math.min(min, findMinHelper(node.left));
+        min = Math.min(min, findMinHelper(node.right));
+    }
+        return min;
     }
 
 
@@ -262,8 +293,12 @@ public class BinaryTree {
      *
      * Depth first search of the tree is based on recursion. This will result
      * in very few lines of code.
+     *
+     * Since this method needs to operate on every element, including the last
+     * one, we can't simply check if node != null and return -1. My solution was
+     * to check if root was null in the public method that calls the helper
+     *
      */
-
     private int nodesGTHelper(Node node, int val) {
 
         // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
@@ -271,10 +306,22 @@ public class BinaryTree {
 
         // return -1; // RECALL, IF TREE IS EMPTY, RETURN -1
 
+        // I had to add the empty tree case to the public method on line 104.
+        // I couldn't get it to return -1 only in the case the first node
+        // was null since it was returning -1 at the end of the traversal
+        // as well.
+        if (node == null) {
+            return 0;
+        }
+        int cnt = 0;
+        if (node.data > val) {
+            cnt++;
+        }
+        cnt += nodesGTHelper(node.left, val);
+        cnt += nodesGTHelper(node.right, val);
 
-        return -1;
+        return cnt;
     }
-
 
     /*
      * public method average()
@@ -310,7 +357,16 @@ public class BinaryTree {
         // RECALL, IF THE TREE IS EMPTY, RETURN 0 FOR BOTH THE SUM AND
         // COUNT LOCATIONS IN THE RETURNED ARRAY AS SHOWN BELOW, ELSE
         // THE 'SUM' IS RETURNED IN INDEX LOCATION 0, AND COUNT IS LOCATION 1
+        int[] sumAndCount = new int[2];
+        if (n == null) {
+            return sumAndCount;
+        }
 
-        return new int[]{0, 0};
+        int[] left = averageHelper(n.left);
+        int[] right = averageHelper(n.right);
+
+        sumAndCount[0] += left[0] + right[0] + n.data;
+        sumAndCount[1] += left[1] + right[1] + 1;
+        return sumAndCount;
     }
 }
