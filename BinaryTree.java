@@ -245,7 +245,6 @@ public class BinaryTree {
         }
     }
 
-
     /*
      * private method findMinHelper()
      *
@@ -296,16 +295,17 @@ public class BinaryTree {
      *
      * Since this method needs to operate on every element, including the last
      * one, we can't simply check if node != null and return -1. My solution was
-     * to check if root was null in the public method that calls the helper
+     * to check if root was null in the public method that calls the helper.
+     * In order to determine the number of nodes that are greater than val,
+     * we need to recursively call the method and increment cnt with the returned
+     * value. This allows us to quickly traverse the tree while keeping a running total
+     * between calls.
+     *
+     * @param node the root of the tree to traverse
+     * @param val the integer to compare to each other node
      *
      */
     private int nodesGTHelper(Node node, int val) {
-
-        // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
-        // BINARY TREE (WHICH IS BASED ON RECURSION)
-
-        // return -1; // RECALL, IF TREE IS EMPTY, RETURN -1
-
         // I had to add the empty tree case to the public method on line 104.
         // I couldn't get it to return -1 only in the case the first node
         // was null since it was returning -1 at the end of the traversal
@@ -349,14 +349,21 @@ public class BinaryTree {
         return (double) sumAndCount[0] / sumAndCount[1];
     }
 
+    /**
+     * private method averageHelper()
+     *
+     * This method is called by public method average(). It traverses the tree using
+     * depth first search, based on recursion. To begin, we declare an integer
+     * array called sumAndCount with length two. This holds both the sum and the count.
+     * We check if the node is null and exit the method if it is.
+     * We next recursively call averageHelper() by declaring new arrays, left and right.
+     * These hold the returned arrays. Finally, we add those values to the original sum and
+     * count array and exit.
+     *
+     * @param n the root of the tree to traverse
+     * @return sumAndCount the array containing sum in index 0 and count in index 1
+     */
     private int[] averageHelper(Node n) {
-
-        // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
-        // BINARY TREE (WHICH IS BASED ON RECURSION)
-
-        // RECALL, IF THE TREE IS EMPTY, RETURN 0 FOR BOTH THE SUM AND
-        // COUNT LOCATIONS IN THE RETURNED ARRAY AS SHOWN BELOW, ELSE
-        // THE 'SUM' IS RETURNED IN INDEX LOCATION 0, AND COUNT IS LOCATION 1
         int[] sumAndCount = new int[2];
         if (n == null) {
             return sumAndCount;
